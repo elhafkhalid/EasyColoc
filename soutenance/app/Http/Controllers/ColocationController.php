@@ -15,13 +15,14 @@ class ColocationController extends Controller
         $colocations = Auth::user()->colocations;
         return view('colocation.index', compact('colocations'));
     }
-    
+
     public function create()
     {
         return view('colocation.create');
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
 
         $request->validate([
             'name' => 'required|string|max:255',
@@ -31,7 +32,7 @@ class ColocationController extends Controller
             ->whereNull('left_at')
             ->exists();
 
-        if ($hasActive) {
+        if ($hasActive){
             return back()->withErrors([
                 'name' => 'colocation active',
             ]);
@@ -47,23 +48,28 @@ class ColocationController extends Controller
             'user_id' => $request->user()->id,
             'colocation_id' => $colocation->id,
             'role' => 'owner',
-            // 'left_at' => now(),
         ]);
 
         return redirect()->route('colocation.show', $colocation);
     }
-    
+
     public function show(Colocation $colocation)
     {
+        $colocation->load([
+            'depenses.payeur',
+            'depenses.category',
+            'users'
+        ]);
         return view('colocation.show', compact('colocation'));
     }
 
-    public function cancel(Colocation $colocation){
+    public function cancel(Colocation $colocation)
+    {
         $colocation->update([
-            'status'=>'cancelled',
+            'status' => 'cancelled',
         ]);
 
-        Membership::where('colocation_id',$colocation->id)->whereNull('left_at')->update(['left_at'=>now()]);
-        return redirect()->route('colocation.index')->with('success','colocation annulee');
+        Membership::where('colocation_id', $colocation->id)->whereNull('left_at')->update(['left_at' => now()]);
+        return redirect()->route('colocation.index')->with('success', 'colocation annulee');
     }
 }

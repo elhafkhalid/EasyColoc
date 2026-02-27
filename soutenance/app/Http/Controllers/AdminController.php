@@ -1,0 +1,50 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\User;
+use App\Models\Colocation;
+use App\Models\Depense;
+use Illuminate\Support\Facades\Auth;
+
+
+class AdminController extends Controller
+{
+    public function index()
+    {
+        if (Auth::user()->role_id === 1){
+            $totalUsers = User::count();
+            $Colocations = Colocation::where('status', 'active')->count();
+            $totalDepenses = Depense::sum('amount');
+            $bannedUsers = User::where('is_banned', true)->count();
+
+            $users = User::orderBy('id', 'desc')->get();
+
+            return view('admin.dashboard', compact(
+                'totalUsers',
+                'Colocations',
+                'totalDepenses',
+                'bannedUsers',
+                'users'
+            ));
+        }
+    }
+
+    public function ban(User $user)
+    {
+        $user->update([
+            'is_banned' => true,
+        ]);
+
+        return back()->with('success', 'Utilisateur banni.');
+    }
+
+    public function unban(User $user)
+    {
+        $user->update([
+            'is_banned' => false,
+        ]);
+
+        return back()->with('success', 'Utilisateur débanni.');
+    }
+}

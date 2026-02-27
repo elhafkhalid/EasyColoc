@@ -14,7 +14,7 @@
                     </a>
 
                     @if (auth()->user()->role_id == 1)
-                        <a href="#" class="block px-4 py-2 rounded hover:bg-gray-200">
+                        <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 rounded hover:bg-gray-200">
                             Admin
                         </a>
                     @endif
@@ -68,11 +68,6 @@
                     <p class="text-gray-500 mb-4">
                         Commencez par créer une nouvelle colocation
                     </p>
-
-                    <a href="{{ route('colocation.create') }}"
-                        class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700">
-                        Créer une colocation
-                    </a>
                 </div>
             @else
                 <!-- Colocations list -->
@@ -99,17 +94,29 @@
                                         {{ $colocation->owner->name ?? '—' }}
                                     </span>
                                 </p>
+                               
+
                             </div>
 
                             <div class="mt-6 flex justify-between items-center">
-                                <span class="text-xs text-gray-400">
-                                    {{ $colocation->users->count() }} membre(s)
-                                </span>
-                                
-                                <a href="{{ route('colocation.show', $colocation) }}"
-                                    class="text-blue-600 hover:text-blue-700 text-sm font-semibold">
-                                    Voir →
-                                </a>
+
+                                <div class="flex items-center gap-3">
+                                    @if ($colocation->status === 'active' && auth()->id() === $colocation->owner_id)
+                                        <a href="{{ route('categories.create', $colocation) }}"
+                                            class="text-sm font-semibold text-gray-700 hover:text-gray-900">
+                                            + Catégorie
+                                        </a>
+                                    @endif
+
+                                    @if ($colocation->status === 'active')
+                                        <a href="{{ route('colocation.show', $colocation) }}"
+                                            class="text-blue-600 hover:text-blue-700 text-sm font-semibold">
+                                            Voir →
+                                        </a>
+                                    @else
+                                        <span class="text-xs text-gray-400">Annulée</span>
+                                    @endif
+                                </div>
                             </div>
 
                         </div>

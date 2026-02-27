@@ -35,12 +35,40 @@
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-semibold">Dépenses récentes</h2>
 
-                    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                    <a href="{{ route('depenses.create', $colocation) }}"
+                        class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
                         + Nouvelle dépense
-                    </button>
+                    </a>
                 </div>
 
-                <p class="text-gray-500">Aucune dépense pour le moment.</p>
+                @if ($colocation->depenses->isEmpty())
+                    <p class="text-gray-500">Aucune dépense pour le moment.</p>
+                @else
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead class="border-b text-gray-500">
+                                <tr>
+                                    <th class="text-left py-2">Titre</th>
+                                    <th class="text-left py-2">Catégorie</th>
+                                    <th class="text-left py-2">Payeur</th>
+                                    <th class="text-left py-2">Montant</th>
+                                    <th class="text-left py-2">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($colocation->depenses as $d)
+                                    <tr class="border-b last:border-b-0">
+                                        <td class="py-2">{{ $d->titre }}</td>
+                                        <td class="py-2">{{ $d->category->name ?? '—' }}</td>
+                                        <td class="py-2">{{ $d->payeur->name ?? '—' }}</td>
+                                        <td class="py-2 font-semibold">{{ number_format($d->amount, 2) }} €</td>
+                                        <td class="py-2">{{ \Carbon\Carbon::parse($d->date)->format('d/m/Y') }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @endif
             </div>
 
             <!-- Right column -->

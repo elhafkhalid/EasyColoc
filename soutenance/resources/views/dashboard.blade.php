@@ -16,7 +16,7 @@
                     </a>
 
                     @if (auth()->user()->role_id == 1)
-                        <a href="#" class="block px-4 py-2 rounded hover:bg-gray-200">
+                        <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 rounded hover:bg-gray-200">
                             Admin
                         </a>
                     @endif
@@ -140,7 +140,7 @@
                 <div class="bg-white p-6 rounded-lg shadow">
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-xl font-semibold">Membres de la coloc</h2>
-                        <span class="text-sm text-gray-500">ACTIFS</span>
+                        <span class="text-sm text-gray-500">active</span>
                     </div>
 
                     <div class="space-y-3">
@@ -164,9 +164,58 @@
                         @endif
                     </div>
 
-                    <button class="mt-4 w-full px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200">
-                        + Inviter un membre
-                    </button>
+                    @if ($colocation && $colocation->status === 'active' && auth()->id() === $colocation->owner_id)
+                        <button type="button" onclick="document.getElementById('inviteModal').showModal()"
+                            class="mt-4 w-full px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200">
+                            + Inviter un membre
+                        </button>
+
+                        <dialog id="inviteModal" class="rounded-lg p-0 w-full max-w-md">
+                            <div class="p-6">
+                                <h2 class="text-lg font-semibold mb-4">
+                                    Inviter un membre
+                                </h2>
+
+                                <form method="POST" action="{{ route('invitations.store', $colocation) }}">
+                                    @csrf
+
+                                    <div class="mb-4">
+                                        <label class="block mb-1 font-semibold">Email</label>
+                                        <input type="email" name="email" value="{{ old('email') }}"
+                                            class="w-full border rounded px-3 py-2" placeholder="exemple@email.com"
+                                            required>
+
+                                        @error('email')
+                                            <p class="text-red-600 text-sm mt-2">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    <div class="flex justify-end gap-2">
+                                        <button type="button" onclick="document.getElementById('inviteModal').close()"
+                                            class="px-4 py-2 rounded bg-gray-200">
+                                            Annuler
+                                        </button>
+
+                                        <button type="submit" class="px-4 py-2 rounded bg-blue-600 text-white">
+                                            Inviter
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- click outside closes -->
+                            <form method="dialog" class="p-0 m-0">
+                                <button class="fixed inset-0 w-full h-full cursor-default" aria-label="close"></button>
+                            </form>
+                        </dialog>
+                        @if ($errors->has('email'))
+                            <script>
+                                document.addEventListener('DOMContentLoaded', () => {
+                                    document.getElementById('inviteModal').showModal();
+                                });
+                            </script>
+                        @endif
+                    @endif
                 </div>
             </div>
 

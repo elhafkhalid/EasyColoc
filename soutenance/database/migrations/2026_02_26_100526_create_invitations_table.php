@@ -10,7 +10,6 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('colocation_id')->constrained()->cascadeOnDelete();
             $table->string('email');
-            $table->string('token')->unique();
             $table->foreignId('invited_by')->constrained('users')->cascadeOnDelete();
             $table->string('status')->default('pending');
             $table->timestamps();
