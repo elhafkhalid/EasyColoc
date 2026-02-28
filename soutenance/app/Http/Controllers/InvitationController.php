@@ -33,15 +33,15 @@ class InvitationController extends Controller
 
             $user = User::where('email', $validated['email'])->first();
 
-            $hasActivateColocation = Membership::where('user_id', $user->id)
+            $isActiveColocation = Membership::where('user_id', $user->id)
                 ->whereNull('left_at')
                 ->exists();
-            if ($hasActivateColocation) {
+            if ($isActiveColocation) {
                 return back();
             }
             
             $isInvited = Invitation::where([
-                'colocation_id' => $colocation->id,
+                // 'colocation_id' => $colocation->id,
                 'email' => $validated['email'],
                 'status' => 'pending',
             ]) -> exists();

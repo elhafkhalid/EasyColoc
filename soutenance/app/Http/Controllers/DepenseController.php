@@ -8,12 +8,15 @@ use Illuminate\Validation\Rule;
 use App\Models\Colocation;
 use App\Models\Depense;
 
+
 class DepenseController extends Controller
 {
 
-    public function create(Colocation $colocation){
+    public function create(Colocation $colocation)
+    {
+
         $isMember = $colocation->users()
-            ->where('users.id', auth()->id())
+            ->where('users.id', Auth::id())
             ->whereNull('memberships.left_at')
             ->exists();
 
@@ -38,15 +41,13 @@ class DepenseController extends Controller
         if ($isMember || $colocation->status === 'active') {
             $validated = $request->validate([
                 'titre' => ['required', 'string', 'max:255'],
-                'amount' => ['required', 'numeric', 'min:0.01'],
+                'amount' => ['required', 'numeric'],
                 'date' => ['required', 'date'],
                 'category_id' => [
                     'required',
-                    Rule::exists('categories', 'id')
-                        ->where('colocation_id', $colocation->id),
+                    'exists:categories,id',
                 ],
                 'payeur_id' => [
-                    'required',
                     Rule::exists('memberships', 'user_id')
                         ->where('colocation_id', $colocation->id)
                         ->whereNull('left_at'),

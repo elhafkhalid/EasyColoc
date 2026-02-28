@@ -16,6 +16,7 @@ class User extends Authenticatable
     public function role(){
         return $this->belongsTo(role::class);
     }
+    
     public function memberships(){
         return $this->hasMany(membership::class);
     }
@@ -42,6 +43,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_banned',
     ];
 
     /**

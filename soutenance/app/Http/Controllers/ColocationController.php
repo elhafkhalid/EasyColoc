@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\colocation;
-use App\Models\Colocation as ModelsColocation;
 use Illuminate\Http\Request;
 use App\Models\Membership;
 use Illuminate\Support\Facades\Auth;
@@ -28,24 +27,18 @@ class ColocationController extends Controller
             'name' => 'required|string|max:255',
         ]);
 
-        $hasActive = Membership::where('user_id', $request->user()->id)
-            ->whereNull('left_at')
-            ->exists();
+        $hasActive = Membership::where('user_id', $request->user()->id)->whereNull('left_at')->exists();
 
-        if ($hasActive){
-            return back()->withErrors([
-                'name' => 'colocation active',
-            ]);
-        }
+        if ($hasActive) return back();
 
-        $colocation = Colocation::create([
+        $colocation = colocation::create([
             'name' => $request->name,
-            'owner_id' => $request->user()->id,
-            'status' => 'active',
+            'owner_id' => Auth::user()->id,
+            'status' => 'active'
         ]);
 
         Membership::create([
-            'user_id' => $request->user()->id,
+            'user_id' => Auth::user()->id,
             'colocation_id' => $colocation->id,
             'role' => 'owner',
         ]);
@@ -60,16 +53,19 @@ class ColocationController extends Controller
             'depenses.category',
             'users'
         ]);
+
         return view('colocation.show', compact('colocation'));
     }
 
-    public function cancel(Colocation $colocation)
-    {
-        $colocation->update([
-            'status' => 'cancelled',
-        ]);
+    public function cancel(Colocation $colocation){
+        if (Auth::user()->id === $colocation->owner_id) {
+            $colocation->update([
+                'status' => 'cancelled',
+            ]);
 
-        Membership::where('colocation_id', $colocation->id)->whereNull('left_at')->update(['left_at' => now()]);
-        return redirect()->route('colocation.index')->with('success', 'colocation annulee');
+            Membership::where('colocation_id', $colocation->id)->whereNull('left_at')->update(['left_at' => now()]);
+
+            return redirect()->route('colocation.index')->with('success','colocation annulle');
+        }
     }
 }

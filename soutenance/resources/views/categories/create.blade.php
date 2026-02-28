@@ -7,7 +7,7 @@
                     Ajouter une catégorie
                 </h1>
 
-                <a href="{{ route('colocation.show', $colocation) }}"
+                <a href="{{ route('colocation.index') }}"
                     class="px-5 py-2.5 rounded-lg bg-gray-200 hover:bg-gray-300 text-sm font-semibold">
                     Retour
                 </a>
