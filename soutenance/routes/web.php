@@ -8,6 +8,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DepenseController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\InvitationController;
+use App\Http\Controllers\MembershipController;
+
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');
 
@@ -51,6 +53,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/invitations', [InvitationController::class, 'index'])->name('invitations.index');
     Route::post('/invitations/{invitation}/accept', [InvitationController::class, 'accept'])->name('invitations.accept');
     Route::post('/invitations/{invitation}/refuse', [InvitationController::class, 'refuse'])->name('invitations.refuse');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::post('/colocation/{colocation}/quitter', [MembershipController::class, 'quitter'])
+        ->name('colocation.quitter');
 });
 
 require __DIR__ . '/auth.php';

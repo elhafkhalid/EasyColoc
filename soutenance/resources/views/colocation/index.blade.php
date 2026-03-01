@@ -108,7 +108,7 @@
                                         </a>
                                     @endif
 
-                                    @if ($colocation->status === 'active')
+                                    @if ($colocation->status === 'active' )
                                         <a href="{{ route('colocation.show', $colocation) }}"
                                             class="text-blue-600 hover:text-blue-700 text-sm font-semibold">
                                             Voir →

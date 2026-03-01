@@ -14,7 +14,11 @@
                     <a href="{{ route('colocation.index') }}" class="block px-4 py-2 rounded hover:bg-gray-200">
                         Colocations
                     </a>
-
+                    @if (auth()->user()->role_id !== 1)
+                        <a href="{{ route('invitations.index') }}" class="block px-4 py-2 rounded hover:bg-gray-200">
+                            Invitations
+                        </a>
+                    @endif
                     @if (auth()->user()->role_id == 1)
                         <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 rounded hover:bg-gray-200">
                             Admin

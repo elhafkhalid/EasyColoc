@@ -37,4 +37,9 @@ class Colocation extends Model
     {
         return $this->hasMany(Depense::class);
     }
+
+    public function invitations()
+    {
+        return $this->hasMany(Invitation::class);
+    }
 }

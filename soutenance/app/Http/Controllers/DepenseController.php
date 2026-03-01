@@ -64,7 +64,7 @@ class DepenseController extends Controller
 
             return redirect()
                 ->route('colocation.show', $colocation)
-                ->with('success', 'Dépense ajoutée avec succès.');
+                ->with('success', 'Depense ajoutee');
         }
     }
 }

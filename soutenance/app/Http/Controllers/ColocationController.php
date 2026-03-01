@@ -1,17 +1,20 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Models\colocation;
 use Illuminate\Http\Request;
 use App\Models\Membership;
 use Illuminate\Support\Facades\Auth;
 
+
 class ColocationController extends Controller
 {
     public function index()
     {
-        $colocations = Auth::user()->colocations;
+        $colocations = auth()->user()->colocations()
+            ->whereNull('left_at') 
+            ->with('owner', 'users')
+            ->get();
         return view('colocation.index', compact('colocations'));
     }
 
@@ -48,6 +51,7 @@ class ColocationController extends Controller
 
     public function show(Colocation $colocation)
     {
+        
         $colocation->load([
             'depenses.payeur',
             'depenses.category',
@@ -57,7 +61,9 @@ class ColocationController extends Controller
         return view('colocation.show', compact('colocation'));
     }
 
-    public function cancel(Colocation $colocation){
+    public function cancel(Colocation $colocation)
+    {
+
         if (Auth::user()->id === $colocation->owner_id) {
             $colocation->update([
                 'status' => 'cancelled',
@@ -65,7 +71,9 @@ class ColocationController extends Controller
 
             Membership::where('colocation_id', $colocation->id)->whereNull('left_at')->update(['left_at' => now()]);
 
-            return redirect()->route('colocation.index')->with('success','colocation annulle');
+            return redirect()->route('colocation.index')->with('success', 'coloication annulle');
+        } else {
+            return back();
         }
     }
 }

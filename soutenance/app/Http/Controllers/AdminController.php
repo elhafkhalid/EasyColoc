@@ -32,7 +32,7 @@ class AdminController extends Controller
         $user->is_banned = true;
         $user->save();
         
-        return back()->with('success', 'Utilisateur banni.');
+        return back()->with('success', 'user bani.');
     }
 
     public function unban(User $user)
@@ -41,6 +41,7 @@ class AdminController extends Controller
             'is_banned' => false,
         ]);
 
-        return back()->with('success', 'Utilisateur débanni.');
+        return back()->with('success', 'user debani.');
     }
 }
+

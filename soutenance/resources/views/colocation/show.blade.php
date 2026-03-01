@@ -17,14 +17,23 @@
                 <a href="{{ route('colocation.index') }}" class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300">
                     Retour
                 </a>
+                @if ($colocation->status === 'active' && auth()->id() !== $colocation->owner_id)
+                    <form method="POST" action="{{ route('colocation.quitter', $colocation) }}">
+                        @csrf
+                        <button type="submit" class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300">
+                            Quitter la colocation
+                        </button>
+                    </form>
+                @endif
+                @if (Auth::user()->id === $colocation->owner_id)
+                    <form method="POST" action="{{ route('colocation.cancel', $colocation) }}">
+                        @csrf
 
-                <form method="POST" action="{{ route('colocation.cancel', $colocation) }}">
-                    @csrf
-
-                    <button type="submit" class="px-4 py-2 rounded-lg bg-red-100 text-red-700 hover:bg-red-200">
-                        Annuler la colocation
-                    </button>
-                </form>
+                        <button type="submit" class="px-4 py-2 rounded-lg bg-red-100 text-red-700 hover:bg-red-200">
+                            Annuler la colocation
+                        </button>
+                    </form>
+                @endif
             </div>
         </div>
 

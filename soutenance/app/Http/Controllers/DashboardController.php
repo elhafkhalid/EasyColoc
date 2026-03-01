@@ -10,9 +10,14 @@ class DashboardController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $colocation = $user->colocations()->where('colocations.status', 'active')->with('users')->first();
+        $colocation = $user->colocations()
+            ->where('colocations.status', 'active')
+            ->whereNull('memberships.left_at') // a resoudre
+            ->with('users')
+            ->first();
+
         $totalDepenses = $colocation ? $colocation->depenses()->sum('amount') : 0;
-        $recentDepenses = $colocation? $colocation->depenses()->latest()->take(3)->get() : collect();
+        $recentDepenses = $colocation ? $colocation->depenses()->latest()->take(3)->get() : collect();
         return view('dashboard', compact(
             'totalDepenses',
             'colocation',
