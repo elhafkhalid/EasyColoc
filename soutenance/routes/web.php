@@ -55,6 +55,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/invitations/{invitation}/refuse', [InvitationController::class, 'refuse'])->name('invitations.refuse');
 });
 
+
 Route::middleware('auth')->group(function () {
     Route::post('/colocation/{colocation}/quitter', [MembershipController::class, 'quitter'])
         ->name('colocation.quitter');
