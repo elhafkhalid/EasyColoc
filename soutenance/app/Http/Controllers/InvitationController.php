@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Models\Invitation;
 use App\Models\Membership;
 use App\Models\Colocation;
@@ -11,13 +10,6 @@ use Illuminate\Support\Facades\Auth;
 
 
 class InvitationController extends Controller {
-
-    public function create(Colocation $colocation)
-    {
-        if (Auth::user()->id === $colocation->owner_id && $colocation->status === 'active') {
-            return view('invitations.create', compact('colocation'));
-        }
-    }
 
     public function store(Request $request, Colocation $colocation){
 
@@ -58,7 +50,7 @@ class InvitationController extends Controller {
                 'status' => 'pending',
             ]);
 
-            return back()->with('success', 'invitation envoyée');
+            return back()->with('success', 'invitation envoye');
         }
     }
 

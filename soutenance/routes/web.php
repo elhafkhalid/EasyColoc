@@ -48,7 +48,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/colocation/{colocation}/invitations/create', [InvitationController::class, 'create'])->name('invitations.create');
+    // Route::get('/colocation/{colocation}/invitations/create', [InvitationController::class, 'create'])->name('invitations.create');
     Route::post('/colocation/{colocation}/invitations', [InvitationController::class, 'store'])->name('invitations.store');
     Route::get('/invitations', [InvitationController::class, 'index'])->name('invitations.index');
     Route::post('/invitations/{invitation}/accept', [InvitationController::class, 'accept'])->name('invitations.accept');
